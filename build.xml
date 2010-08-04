@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="posserver" default="jar" basedir=".">
+	<property file="build.properties"/>
+	<property name="author" value="arden"/>			
+	<property name="src" value="./src/main/java"/>
+    <property name="resources" value="./src/main/resources"/>
+    <property name="buildtime" value="../repository/buildtime"/>
+	<property name="runtime" value="../repository/runtime"/>
+	<property name="grails" value="${grails.home}/lib"/>
+	<property name="classes" value="./target/classes"/>
+	<property name="dist" value="./dist"/>				
+	<property name="version" value="1.0"/>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}"/>
+		<fileset dir="${buildtime}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${runtime}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${dist}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="${grails}">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+    <target name="init">
+        <mkdir dir="${classes}"/>
+        <mkdir dir="${dist}"/>		    	
+    </target>
+
+    <target name="clean">
+       <delete dir="${classes}"/>	
+    </target>
+    
+    <target name="build" depends="init">
+        <javac destdir="${classes}" fork="true" encoding="utf-8">
+            <src path="${src}"/>
+            <classpath refid="project.classpath"/>
+        </javac>
+    	<copy todir="${classes}">
+    	    <fileset  dir="${resources}">
+    	        <include name="**/*.*" />
+    	        <exclude name="**/*.java" />    	    	
+    	    </fileset>
+    	</copy>
+    </target>
+
+	<target name="jar" depends="clean,build">
+	  	   <jar destfile="${dist}/jrails-${version}.jar"
+					   includes="**/*.class"
+				       basedir="${classes}">
+					<manifest>
+				       <attribute name="Built-By" value="Build by ${author}"/>
+				       <attribute name="paojiao" value="1.0"/>				
+				    </manifest>
+			</jar>
+	</target>
+</project>
